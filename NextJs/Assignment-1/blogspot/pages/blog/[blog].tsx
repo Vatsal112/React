@@ -2,7 +2,8 @@ import RichTextComponents from "@/components/Richtext/Richtext";
 import { getAllBlogs, getSingleBlog } from "@/utils/blogFetcher";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
-import path from "path";
+import bookmarkImage from '@/public/bookmark.png'
+import { useSession } from "next-auth/client";
 
 type blogData = {
   title: string;
@@ -34,7 +35,22 @@ type blogData = {
 };
 
 const BlogData = (blog: { blogData: blogData[] }) => {
+  const [session]:any = useSession();
   const { blogData } = blog;
+
+  const addToReadingList=(slug:string)=>{
+    let oldData = localStorage.getItem(session.user.id)
+    if(!oldData) oldData = '';
+    let data = oldData.split(',').find((s)=>{
+      return s === slug
+    });
+    if(!data){
+      localStorage.setItem(session.user.id,oldData + slug + ',')
+    }else{
+      alert('Already added to reading list!!')
+    }
+  }
+
   return (
     <div className="sm:mx-24 p-10 ">
       <div className="w-full text-center flex justify-center">
@@ -63,8 +79,11 @@ const BlogData = (blog: { blogData: blogData[] }) => {
                 {blogData[0].author.name}
               </p>
             </div>
+            {session && (
+              <Image src={bookmarkImage} height={40} width={40} alt="bookmark" title="add to bookmark" className="pt-4 text-center cursor-pointer" onClick={()=>addToReadingList(blogData[0].slug.current)} />
+            )}
           </div>
-          <div className="sm:py-4 text-justify md:py-4 lg:py-14 xl:py-16 text-lg">
+          <div className="text-justify md:py-4 sm:py-2 xl:py-16 text-lg">
             <PortableText
               value={blogData[0]?.body}
               components={RichTextComponents}
