@@ -50,3 +50,33 @@ export async function getSingleBlog(slug: string) {
   );
   return data;
 }
+
+export async function getBookmarkBlogs(slugs: any) {
+  console.log(slugs)
+  const data = await client.fetch(`*[_type == 'post' && (slug.current in $slugs)]{
+  
+    _id,
+    title,
+    slug,
+    mainImage{
+      asset->{
+        _id,
+        url
+      }
+    },
+    categories[]->{
+      title
+    },
+    author->{
+      name,
+      image{
+        asset->{
+          url
+        }
+      }
+    }
+  }`, {
+    slugs,
+  })
+  return data;
+}

@@ -25,12 +25,15 @@ type blog = {
 const Blogs = (props: { blogs: blog[] }) => {
   const { blogs } = props;
   return (
-    <div className="flex flex-wrap gap-10 items-center w-full justify-center">
+    <div className="flex flex-wrap gap-10 items-center w-full justify-center ">
       {blogs.map((blog) => {
         return (
-          <>
-            <Link href={`blog/${blog.slug.current}`} key={blog._id}>
-              <div className="pt-10 ">
+          <div
+            key={blog._id}
+            className="hover:-translate-y-2 transition ease-in"
+          >
+            <Link href={`blog/${blog.slug.current}`}>
+              <div className="pt-10">
                 <div>
                   <Image
                     src={blog.mainImage.asset.url}
@@ -54,7 +57,7 @@ const Blogs = (props: { blogs: blog[] }) => {
                 </div>
               </div>
             </Link>
-          </>
+          </div>
         );
       })}
     </div>

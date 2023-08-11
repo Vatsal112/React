@@ -1,9 +1,21 @@
 import RichTextComponents from "@/components/Richtext/Richtext";
-import { getAllBlogs, getSingleBlog } from "@/utils/blogFetcher";
+import {
+  getAllBlogs,
+  getBookmarkBlogs,
+  getSingleBlog,
+} from "@/utils/blogFetcher";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
-import bookmarkImage from '@/public/bookmark.png'
+import bookmarkImage from "@/public/bookmark.png";
+import bookmarkImageFill from "@/public/bookmark-fill.png";
+
 import { useSession } from "next-auth/client";
+import {
+  addBlogToReadingList,
+  getBlogBasedOnUserId,
+  getReadingListData,
+} from "@/utils/indexDB";
+import { useRouter } from "next/router";
 
 type blogData = {
   title: string;
@@ -35,21 +47,19 @@ type blogData = {
 };
 
 const BlogData = (blog: { blogData: blogData[] }) => {
-  const [session]:any = useSession();
+  const [session]: any = useSession();
   const { blogData } = blog;
+  const router = useRouter();
 
-  const addToReadingList=(slug:string)=>{
-    let oldData = localStorage.getItem(session.user.id)
-    if(!oldData) oldData = '';
-    let data = oldData.split(',').find((s)=>{
-      return s === slug
-    });
-    if(!data){
-      localStorage.setItem(session.user.id,oldData + slug + ',')
-    }else{
-      alert('Already added to reading list!!')
-    }
-  }
+  let data: any;
+  const isThisBookmarkedBlog = async () => {
+    data = await getBlogBasedOnUserId(session?.user?.id);
+  };
+  isThisBookmarkedBlog();
+
+  const addToReadingList = async (slug: string) => {
+    await addBlogToReadingList(slug, session.user.id);
+  };
 
   return (
     <div className="sm:mx-24 p-10 ">
@@ -58,7 +68,7 @@ const BlogData = (blog: { blogData: blogData[] }) => {
           <div>
             <Image
               src={blogData[0]?.mainImage?.asset?.url}
-              alt={blogData[0].slug?.current}
+              alt={blogData[0]?.slug?.current}
               width="0"
               height="0"
               sizes="30vw"
@@ -79,8 +89,26 @@ const BlogData = (blog: { blogData: blogData[] }) => {
                 {blogData[0].author.name}
               </p>
             </div>
-            {session && (
-              <Image src={bookmarkImage} height={40} width={40} alt="bookmark" title="add to bookmark" className="pt-4 text-center cursor-pointer" onClick={()=>addToReadingList(blogData[0].slug.current)} />
+            {session && data && data.includes(router.query.blog) ? (
+              <Image
+                src={bookmarkImage}
+                height={40}
+                width={40}
+                alt="bookmark"
+                title="add to bookmark"
+                className="pt-4 text-center cursor-pointer"
+                onClick={() => addToReadingList(blogData[0].slug.current)}
+              />
+            ) : (
+              <Image
+                src={bookmarkImageFill}
+                height={40}
+                width={40}
+                alt="bookmark"
+                title="Remove from bookmark"
+                className="pt-4 text-center cursor-pointer"
+                onClick={() => addToReadingList(blogData[0].slug.current)}
+              />
             )}
           </div>
           <div className="text-justify md:py-4 sm:py-2 xl:py-16 text-lg">

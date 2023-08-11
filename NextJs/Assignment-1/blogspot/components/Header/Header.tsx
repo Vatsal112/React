@@ -8,14 +8,14 @@ const Header = () => {
         <div>
           <ul className="flex justify-between flex-wrap items-center">
             <li>
-              <div>
+              <Link href="/blog">
                 <p className="text-2xl font-bold text-center ">BlogSpot</p>
-              </div>
+              </Link>
             </li>
             {session && (
               <li>
                 <Link
-                  href='/bookmark'
+                  href="/bookmark"
                   className="text-white hover:text-black border border-slate-100 rounded-lg p-2 w-28 text-center hover:bg-white"
                 >
                   Reading List
@@ -26,10 +26,10 @@ const Header = () => {
               <li>
                 <div className="font-bold">
                   <Link
-                    href='/api/auth/signin'
+                    href="/api/auth/signin"
                     onClick={(e) => {
                       e.preventDefault();
-                      signIn("github");
+                      signIn();
                     }}
                     className="text-white hover:text-black border border-slate-100 rounded-lg p-2 w-20 text-center hover:bg-white"
                   >
@@ -42,7 +42,7 @@ const Header = () => {
               <li>
                 <div className="font-bold">
                   <Link
-                    href='/api/auth/singout'
+                    href="/api/auth/singout"
                     onClick={(e) => {
                       e.preventDefault();
                       signOut();

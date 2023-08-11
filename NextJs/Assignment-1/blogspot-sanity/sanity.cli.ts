@@ -16,9 +16,5 @@ export default defineCliConfig({
         process:true
       }
     })],
-    define: {
-      ...prev.define,
-      'process.env': {},
-    },
   }),
 })
