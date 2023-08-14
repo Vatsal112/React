@@ -21,7 +21,7 @@ let db: any;
 // };
 
 const openDB = async () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const openRequest = indexedDB.open('readingList', 1);
 
     openRequest.onupgradeneeded = (event: any) => {
@@ -66,6 +66,18 @@ export async function getBlogBasedOnUserId(userId: number) {
 
   const t = data
     .filter((d: any) => d.userId === userId)
-    .map((d: any) => d.slug);
+    .map((d: any) => {
+      return {
+        slug:d.slug, 
+        id:d.id
+      }
+    });
   return t;
+}
+
+export async function removeBlogFromList(id:number){
+  const db: any = await openDB()
+  const tx = await db.transaction(["readingList"], "readwrite");
+  const store = await tx.objectStore("readingList")
+  const data = await store.delete(id);
 }

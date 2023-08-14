@@ -1,6 +1,8 @@
+import BlogList from "@/components/BlogList/BlogList";
 import { getBookmarkBlogs, getSingleBlog } from "@/utils/blogFetcher";
 import { getBlogBasedOnUserId, getReadingListData } from "@/utils/indexDB";
 import { getSession } from "next-auth/client";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -26,53 +28,34 @@ export default function index() {
   useEffect(() => {
     const fetchBlogData = async () => {
       if (slugsList.length > 0) {
-        const data = await getBookmarkBlogs(slugsList);
+        const slugs = slugsList.map((s: any) => s.slug);
+        const data = await getBookmarkBlogs(slugs);
         setBlogData(data);
       }
     };
     fetchBlogData();
   }, [slugsList]);
 
+  if (blogData.length <= 0) {
+    return (
+      <h2 className="text-center text-3xl py-10">
+        You dont have any bookmarked blogs
+      </h2>
+    );
+  }
+
   return (
     <div>
+      <Head>
+        <title>Blog</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="Blogging Website" />
+      </Head>
       <h2 className="text-black font-semibold text-3xl text-center py-5">
         Bookmarked Blogs
       </h2>
-      <div className="flex flex-wrap gap-10 items-center w-full justify-center ">
-        {blogData.map((blog: any) => {
-          return (
-            <div
-              key={blog._id}
-              className="hover:-translate-y-2 transition ease-in"
-            >
-              <Link href={`blog/${blog.slug.current}`}>
-                <div className="pt-10">
-                  <div>
-                    <Image
-                      src={blog.mainImage.asset.url}
-                      alt={blog.slug.current}
-                      width="0"
-                      height="0"
-                      sizes="20vw"
-                      className="rounded-lg w-80 h-60"
-                    />
-                  </div>
-                  <div className="py-6">
-                    <span className="pb-4 text-xs tracking-wider font-semibold">
-                      {blog.categories.map((cat: any) =>
-                        cat.title.toLocaleUpperCase()
-                      )}
-                      | 12 MIN READ
-                    </span>
-                    <p className="font-bold text-3xl pt-3 text-black">
-                      {blog.title}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          );
-        })}
+      <div className="grid sm:grid-cols-1 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+        <BlogList blogs={blogData} />
       </div>
     </div>
   );

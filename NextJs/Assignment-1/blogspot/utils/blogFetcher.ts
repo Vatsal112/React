@@ -52,7 +52,7 @@ export async function getSingleBlog(slug: string) {
 }
 
 export async function getBookmarkBlogs(slugs: any) {
-  console.log(slugs)
+
   const data = await client.fetch(`*[_type == 'post' && (slug.current in $slugs)]{
   
     _id,

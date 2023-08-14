@@ -3,6 +3,7 @@ import {deskTool,} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemas'
 import { defaultDocumentNode } from './src/defaultDocumentNode'
+import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
 
 export default defineConfig({
   name: 'default',
@@ -13,7 +14,7 @@ export default defineConfig({
 
   plugins: [deskTool({
     defaultDocumentNode:defaultDocumentNode
-  }), visionTool()],
+  }), visionTool(),unsplashImageAsset()],
 
   schema: {
     types: schemaTypes,
