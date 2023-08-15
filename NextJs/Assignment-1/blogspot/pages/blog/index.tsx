@@ -46,5 +46,6 @@ export async function getStaticProps() {
     props: {
       blogs: response,
     },
+    revalidate:10
   };
 }
