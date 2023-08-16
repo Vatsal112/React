@@ -1,19 +1,9 @@
-import RichTextComponents from "@/components/Richtext/Richtext";
-import {
-  getAllBlogs,
-  getBookmarkBlogs,
-  getSingleBlog,
-} from "@/utils/blogFetcher";
-import { PortableText } from "@portabletext/react";
-import Image from "next/image";
-import bookmarkImage from "@/public/bookmark.png";
-import bookmarkImageFill from "@/public/bookmark-fill.png";
+import { getAllBlogs, getSingleBlog } from "@/utils/blogFetcher";
 
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import {
   addBlogToReadingList,
   getBlogBasedOnUserId,
-  getReadingListData,
   removeBlogFromList,
 } from "@/utils/indexDB";
 import { useRouter } from "next/router";
@@ -51,44 +41,50 @@ type blogData = {
 };
 
 const BlogData = (blog: { blogData: blogData[] }) => {
-  const [session]: any = useSession();
+  const { data: session }: any = useSession();
 
   const [isBookmark, setIsBookmark] = useState<any>(false);
   const [bookmark, setBookmark] = useState<any>([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const isThisBookmarkedBlog = async () => {
       const data = await getBlogBasedOnUserId(session?.user?.id);
       setBookmark(data);
-      const isBlogBookmarked = data.map((d:any)=> d.slug)
-      if(isBlogBookmarked.includes(router.query.blog)){
-        setIsBookmark(true)
+      const isBlogBookmarked = data.map((d: any) => d.slug);
+      if (isBlogBookmarked.includes(router.query.blog)) {
+        setIsBookmark(true);
       }
-     };
-     isThisBookmarkedBlog();
-  },[isBookmark])
+    };
+    isThisBookmarkedBlog();
+  }, [isBookmark]);
 
   const { blogData } = blog;
   const router = useRouter();
 
   const addToReadingList = async (slug: string) => {
     await addBlogToReadingList(slug, session.user.id);
-    setIsBookmark(true)
+    setIsBookmark(true);
   };
 
-  const removeFromReadingList = async(slug: string)=>{
-    const id = bookmark.find((d:any)=>d.slug === slug);
+  const removeFromReadingList = async (slug: string) => {
+    const id = bookmark.find((d: any) => d.slug === slug);
     await removeBlogFromList(id.id);
-    setIsBookmark(false)
-  }
+    setIsBookmark(false);
+  };
   return (
     <>
-        <Head>
-      <title>Blog</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <meta name='description' content='Blogging Website'/>
+      <Head>
+        <title>Blog</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="Blogging Website" />
       </Head>
-    <BlogPage blogData={blogData} session={session} isBookmark={isBookmark} addToReadingList={addToReadingList} removeFromReadingList={removeFromReadingList} />
+      <BlogPage
+        blogData={blogData}
+        session={session}
+        isBookmark={isBookmark}
+        addToReadingList={addToReadingList}
+        removeFromReadingList={removeFromReadingList}
+      />
     </>
   );
 };
@@ -113,10 +109,11 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: any) {
   const data = await getSingleBlog(context.params.blog);
-
+  console.log("STAT", data);
   return {
     props: {
       blogData: data,
     },
+    revalidate: 10,
   };
 }

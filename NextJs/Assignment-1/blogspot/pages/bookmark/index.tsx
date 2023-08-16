@@ -1,10 +1,8 @@
 import BlogList from "@/components/BlogList/BlogList";
 import { getBookmarkBlogs, getSingleBlog } from "@/utils/blogFetcher";
 import { getBlogBasedOnUserId, getReadingListData } from "@/utils/indexDB";
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/react";
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function index() {

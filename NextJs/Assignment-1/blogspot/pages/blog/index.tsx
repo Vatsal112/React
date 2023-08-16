@@ -26,14 +26,14 @@ const Blogs = (props: { blogs: blog[] }) => {
   const { blogs } = props;
   return (
     <>
-    <Head>
-      <title>Blog</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <meta name='description' content='Blogging Website'/>
+      <Head>
+        <title>Blog</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="Blogging Website" />
       </Head>
-    <div className="grid sm:grid-cols-1 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-      <BlogList blogs={blogs} />
-    </div>
+      <div className="grid sm:grid-cols-1 py-5 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <BlogList blogs={blogs} />
+      </div>
     </>
   );
 };
@@ -46,6 +46,6 @@ export async function getStaticProps() {
     props: {
       blogs: response,
     },
-    revalidate:10
+    revalidate: 10,
   };
 }
