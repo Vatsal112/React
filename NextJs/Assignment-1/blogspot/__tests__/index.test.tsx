@@ -2,7 +2,9 @@ import Blogs from "../pages/blog/index";
 import { getAllBlogs } from "@/utils/blogFetcher";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-
+import { error } from "console";
+// import { useSession } from "next-auth/react";
+// jest.mock("next-auth/react");
 // const mockData = [
 //     {
 //         title:'this is a title',
@@ -36,18 +38,35 @@ import { render, screen } from "@testing-library/react";
 //   //     expect(container).toMatchSnapshot();
 //   //   }
 // });
+import client from "../utils/sanityConfig";
 
+// export async function getAllBlogs() {
+//   const data = await client.fetch(`*[_type=='post']{
+//         _id,
+//         title,
+//         slug,
+//         mainImage{
+//           asset->{
+//             _id,
+//             url
+//           }
+//         },
+//         categories[]->{
+//           title
+//         }
+//       }`);
+//   return data;
+// }
 describe("App", () => {
-  it("should be able to run tests", () => {
-    let data;
-    const fetch = async () => {
-      data = await getAllBlogs();
-      console.log(data);
-    };
-    fetch();
-    if (data) {
-      const { container } = render(<Blogs blogs={data} />);
-      expect(container).toBeInTheDocument();
-    }
+  it("should be able to run tests", async () => {
+    // const mockSession: any = {
+    //   expires: "1",
+    //   user: { email: "a", name: "Delta", image: "c" },
+    // };
+
+    // (useSession as jest.Mock).mockReturnValueOnce([mockSession, false]);
+    let data = await getAllBlogs();
+    console.log(data);
+    expect(data).not.toBeNull();
   });
 });
