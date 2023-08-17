@@ -13,28 +13,28 @@ const Header = () => {
   };
   const { status, data: session } = useSession();
   return (
-    <header className="w-full sm:px-0 lg:px-20 xl:px-20 md:px-20 py-3  bg-slate-900 text-white sticky top-0 z-10">
+    <header className="w-full sm:px-0 lg:px-20  xl:px-20 md:px-20 py-3  bg-slate-900 text-white sticky top-0 z-10">
       <nav className="w-full">
         <div>
           <ul className="flex justify-between flex-wrap items-center lg:flex-row md:flex-row xl:flex-row sm:flex-col">
-            <li>
+            <li className="lg:w-[40%] xl:w-[45%] md:w-[40%] lg:text-left sm:text-center">
               <Link href="/blog">
-                <p className="text-2xl font-bold text-center ">BlogSpot</p>
+                <p className="text-2xl  font-bold">BlogSpot</p>
               </Link>
             </li>
-
+            <div className="lg:w-[60%] xl:w-[55%] md:w-[60%] flex items-center lg:justify-between sm:justify-center sm:w-full sm:px-8 lg:px-0">
             {session && (
               <li>
                 <Link
                   href="/bookmark"
-                  className="text-white mr-3 font-bold sm:text-sm md:text-base xl:text-base hover:text-black border border-slate-100 rounded-lg p-2  hover:bg-white"
+                  className="text-white mr-3  font-bold sm:text-sm md:text-base xl:text-base hover:text-black border border-slate-100 rounded-lg p-2  hover:bg-white"
                 >
                   Reading List
                 </Link>
               </li>
             )}
 
-            <div className="sm:flex sm:w-auto justify-between items-center w-full sm:py-4">
+            <div className="sm:flex sm:w-auto lg:justify-between items-center w-full sm:py-4">
               {!session && status !== "loading" && (
                 <>
                   <li>
@@ -63,7 +63,7 @@ const Header = () => {
               {session && (
                 <>
                   <li>
-                    <div className="text-lg font-semibold flex items-center justify-center text-white mr-5">
+                    <div className="text-lg sm:hidden font-semibold flex items-center justify-center text-white mr-5">
                       <Image
                         src={userIcon}
                         width={30}
@@ -89,6 +89,7 @@ const Header = () => {
                   </li>
                 </>
               )}
+            </div>
             </div>
           </ul>
         </div>

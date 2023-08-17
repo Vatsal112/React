@@ -10,7 +10,6 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/components/(.*)$": "<rootDir>/components/$1",
     "^@/pages/(.*)$": "<rootDir>/pages/$1",
-    "^@next-auth/react": "<rootDir>/blogspot/node_modules/$1",
   },
 };
 
