@@ -6,11 +6,11 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import {
   addBlogToReadingList,
-  getBlogBasedOnUserId,
   getReadingListData,
   removeBlogFromList,
 } from "@/utils/indexDB";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 type blog = {
   title: string;
@@ -34,12 +34,10 @@ type blog = {
 
 const BlogList = (props: { blogs: blog[] }) => {
   const { blogs } = props;
-  // const { blogData } = blog;
   const router = useRouter();
 
   const { data: session, status }: any = useSession();
 
-  // const [isBookmark, setIsBookmark] = useState<Boolean>(false);
   const [bookmark, setBookmark] = useState<any>([]);
   const [userSlugs, setUserSlugs] = useState<any>([]);
 
@@ -49,20 +47,28 @@ const BlogList = (props: { blogs: blog[] }) => {
       const filteredData = data.filter(
         (d: any) => d.userId === session?.user?.id
       );
-      setBookmark(() => filteredData);
+      setBookmark(filteredData);
       setUserSlugs(filteredData.map((d: any) => d.slug));
     };
     status === "authenticated" && isThisBookmarkedBlog();
-  }, [status]);
+  }, [status, bookmark]);
 
   const addToReadingList = async (slug: string) => {
-    await addBlogToReadingList(slug, session.user.id);
-    setUserSlugs((prev: any) => [...prev, slug]);
+    if (userSlugs.length >= 5) {
+      toast("You cannot add more than 5 blogs to bookmark", {
+        hideProgressBar: true,
+        autoClose: 4000,
+        type: "error",
+      });
+    } else {
+      await addBlogToReadingList(slug, session.user.id);
+      setUserSlugs((prev: any) => [...prev, slug]);
+    }
   };
 
   const removeFromReadingList = async (slug: string) => {
     const id = bookmark.find((d: any) => d.slug === slug);
-    await removeBlogFromList(id.id);
+    await removeBlogFromList(id?.id);
     const data = userSlugs.filter((d: any) => d !== slug);
     setUserSlugs(data);
   };
@@ -79,7 +85,7 @@ const BlogList = (props: { blogs: blog[] }) => {
         return (
           <div
             key={blog._id}
-            className="hover:-translate-y-2 transition ease-in sm:w-[50%] md:w-[70%] xl:w-[75%] justify-center justify-self-center"
+            className="hover:-translate-y-2 transition ease-in sm:w-[42%] xsm:w-[30%] md:w-[70%] xl:w-[75%] justify-center justify-self-center"
           >
             <div className="pt-5">
               <div>
@@ -95,11 +101,13 @@ const BlogList = (props: { blogs: blog[] }) => {
               </div>
               <div className="py-6 xl:text- md:text-left lg:text-left">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs tracking-wider font-semibold">
-                    {blog.categories.map((cat: any) =>
-                      cat.title.toLocaleUpperCase()
-                    )}
-                  </span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs tracking-wider  font-semibold">
+                      {blog.categories.map((cat: any) => (
+                        <p className="mr-2">{cat.title.toLocaleUpperCase()}</p>
+                      ))}
+                    </span>
+                  </div>
                   {!session && (
                     <Image
                       src={bookmarkImage}
@@ -133,7 +141,7 @@ const BlogList = (props: { blogs: blog[] }) => {
                     />
                   )}
                 </div>
-                <p className="font-bold md:text-lg lg:text-xl sm:text-sm xl:text-2xl pt-3 truncate">
+                <p className="font-bold md:text-lg lg:text-xl sm:text-base xl:text-2xl pt-3 truncate">
                   {blog.title}
                 </p>
               </div>

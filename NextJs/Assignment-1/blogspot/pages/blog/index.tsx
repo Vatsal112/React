@@ -27,11 +27,11 @@ const Blogs = (props: { blogs: blog[] }) => {
   return (
     <>
       <Head>
-        <title>Blog</title>
+        <title>BlogSpot</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content="Blogging Website" />
       </Head>
-      <div className="grid sm:grid-cols-1 py-5 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid py-5 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <BlogList blogs={blogs} />
       </div>
     </>

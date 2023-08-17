@@ -74,7 +74,7 @@ const BlogData = (blog: { blogData: blogData[] }) => {
   return (
     <>
       <Head>
-        <title>Blog</title>
+        <title>{blogData[0].title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content="Blogging Website" />
       </Head>
@@ -109,7 +109,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: any) {
   const data = await getSingleBlog(context.params.blog);
-  console.log("STAT", data);
   return {
     props: {
       blogData: data,

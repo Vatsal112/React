@@ -45,14 +45,14 @@ export default function index() {
   return (
     <div>
       <Head>
-        <title>Blog</title>
+        <title>Bookmark Blogs</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content="Blogging Website" />
       </Head>
       <h2 className="text-black font-semibold text-3xl text-center py-5">
         Bookmarked Blogs
       </h2>
-      <div className="grid sm:grid-cols-1 gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+      <div className="grid gap-x-5 place-content-center  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         <BlogList blogs={blogData} />
       </div>
     </div>
